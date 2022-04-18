@@ -1,28 +1,42 @@
 import 'package:flutter/material.dart';
 
+import '../models/models.dart';
+
 class MovieSlider extends StatelessWidget {
+  final List<Movie> popularMovies;
+  final String? title;
+
+  const MovieSlider({Key? key, required this.popularMovies, this.title})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 270,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Popular',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(title!,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
           const SizedBox(
             height: 5,
           ),
           Expanded(
             child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 20,
-              itemBuilder: (_, int index) => _MoviePoster(),
-            ),
+                scrollDirection: Axis.horizontal,
+                itemCount: popularMovies.length,
+                itemBuilder: (_, int index) {
+                  final popularMovie = popularMovies[index];
+                  return _MoviePoster(
+                    popularMovie: popularMovie,
+                  );
+                }),
           ),
         ],
       ),
@@ -32,6 +46,10 @@ class MovieSlider extends StatelessWidget {
 
 //creo este widget con guion bajo porque es una clase privada que no saldra de aqui
 class _MoviePoster extends StatelessWidget {
+  final Movie popularMovie;
+
+  const _MoviePoster({Key? key, required this.popularMovie}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,9 +63,9 @@ class _MoviePoster extends StatelessWidget {
                 arguments: 'movie_instance'),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpg'),
-                image: NetworkImage('https://via.placeholder.com/300x400'),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(popularMovie.fullPosterImg),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,
@@ -55,8 +73,8 @@ class _MoviePoster extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          const Text(
-            'Clone Wars: The Bad Batch',
+          Text(
+            popularMovie.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,

@@ -8,10 +8,11 @@ class MovieProvider extends ChangeNotifier {
   final String _language = 'es-ES';
 
   List<Movie> onDisplayMovies = [];
+  List<Movie> popularMovies = [];
 
   MovieProvider() {
-    print("Movie Provider inicializado");
     getNowPlayingMovies();
+    getPopularMovies();
   }
 
   getNowPlayingMovies() async {
@@ -23,6 +24,23 @@ class MovieProvider extends ChangeNotifier {
     final nowPlayingResponse = NowPlayingResponse.fromJson(response.body);
 
     onDisplayMovies = nowPlayingResponse.results;
+//Para la paginacion se puede hacer la desestructuracion del objeto
+    //onDisplayMovies = [...nowPlayingResponse.results];
+
+    //ESTO HACE REDIBUJAR LOS SCREENS EN LOS WIDGETS QUE ESTAN A LA ESCUCHA DE ESTA DATA
+    notifyListeners();
+  }
+
+  getPopularMovies() async {
+    var url = Uri.https(_urlBase, '3/movie/popular',
+        {'api_key': _apiKey, 'language': _language, 'page': '1'});
+
+    // Await the http get response, then decode the json-formatted response.
+    final response = await http.get(url);
+    final moviePopularResponse = MoviePopular.fromJson(response.body);
+
+    popularMovies = [...popularMovies, ...moviePopularResponse.results];
+
 //Para la paginacion se puede hacer la desestructuracion del objeto
     //onDisplayMovies = [...nowPlayingResponse.results];
 
