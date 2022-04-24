@@ -89,8 +89,8 @@ class _MoviePoster extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'detail',
-                arguments: 'movie_instance'),
+            onTap: () =>
+                Navigator.pushNamed(context, 'detail', arguments: popularMovie),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(
