@@ -54,6 +54,13 @@ class Cast {
   String? department;
   String? job;
 
+  get fullProfilePath {
+    if (profilePath != null) {
+      return 'https://image.tmdb.org/t/p/w500$profilePath';
+    }
+    return 'https://i.stack.imgur.com/GNhxO.png';
+  }
+
   factory Cast.fromJson(String str) => Cast.fromMap(json.decode(str));
 
   factory Cast.fromMap(Map<String, dynamic> json) => Cast(

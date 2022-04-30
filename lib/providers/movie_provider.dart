@@ -10,6 +10,8 @@ class MovieProvider extends ChangeNotifier {
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
 
+  Map<int, List<Cast>> moviesCast = {};
+
   MovieProvider() {
     getNowPlayingMovies();
     getPopularMovies();
@@ -53,5 +55,12 @@ class MovieProvider extends ChangeNotifier {
 
     //ESTO HACE REDIBUJAR LOS SCREENS EN LOS WIDGETS QUE ESTAN A LA ESCUCHA DE ESTA DATA
     notifyListeners();
+  }
+
+  Future<List<Cast>> getMovieCast(int movieId) async {
+    final jsonData = await _getJsonData('3/movie/$movieId/credits');
+    final creditsResponse = MovieCredits.fromJson(jsonData);
+
+    return moviesCast[movieId] = creditsResponse.cast;
   }
 }
