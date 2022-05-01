@@ -64,24 +64,30 @@ class _MovieSliderState extends State<MovieSlider> {
                 itemBuilder: (_, int index) {
                   final popularMovie = widget.popularMovies[index];
                   return _MoviePoster(
-                    popularMovie: popularMovie,
-                  );
+                      popularMovie: popularMovie,
+                      heroId:
+                          '${widget.title}-$index-${widget.popularMovies[index].id}');
                 }),
           ),
         ],
       ),
     );
   }
-}
+} //popularMovie: popularMovie, heroId:'${widget.title}-${index}-${widget.popularMovies[index].id}'
 
 //creo este widget con guion bajo porque es una clase privada que no saldra de aqui
 class _MoviePoster extends StatelessWidget {
   final Movie popularMovie;
+  final String heroId;
 
-  const _MoviePoster({Key? key, required this.popularMovie}) : super(key: key);
+  const _MoviePoster(
+      {Key? key, required this.popularMovie, required this.heroId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    popularMovie.heroId = heroId;
+
     return Container(
       width: 130,
       height: 190,
@@ -91,14 +97,17 @@ class _MoviePoster extends StatelessWidget {
           GestureDetector(
             onTap: () =>
                 Navigator.pushNamed(context, 'detail', arguments: popularMovie),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                placeholder: const AssetImage('assets/no-image.jpg'),
-                image: NetworkImage(popularMovie.fullPosterImg),
-                width: 130,
-                height: 190,
-                fit: BoxFit.cover,
+            child: Hero(
+              tag: popularMovie.heroId!,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.jpg'),
+                  image: NetworkImage(popularMovie.fullPosterImg),
+                  width: 130,
+                  height: 190,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

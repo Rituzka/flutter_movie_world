@@ -33,6 +33,8 @@ class Movie {
   double voteAverage;
   int voteCount;
 
+  String? heroId;
+
   //image for the card swipper
   get fullPosterImg {
     if (posterPath != null) {

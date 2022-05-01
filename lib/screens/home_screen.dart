@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_world/providers/movie_provider.dart';
+import 'package:movie_world/search/search_delegate.dart';
 import 'package:movie_world/widgets/card_swiper.dart';
 import 'package:movie_world/widgets/movie_slider.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,10 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Movie World'),
         elevation: 0,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search_sharp))
+          IconButton(
+              onPressed: () =>
+                  showSearch(context: context, delegate: MovieSearchDelegate()),
+              icon: const Icon(Icons.search_sharp))
         ],
       ),
       body: SingleChildScrollView(

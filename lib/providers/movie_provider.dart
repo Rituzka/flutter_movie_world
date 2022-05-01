@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_world/models/models.dart';
+import 'package:movie_world/models/search_movies_response.dart';
 
 class MovieProvider extends ChangeNotifier {
   final String _urlBase = 'api.themoviedb.org';
@@ -9,7 +10,7 @@ class MovieProvider extends ChangeNotifier {
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
-
+  List<Movie> searchMovies = [];
   Map<int, List<Cast>> moviesCast = {};
 
   MovieProvider() {
@@ -20,7 +21,7 @@ class MovieProvider extends ChangeNotifier {
   int _popularPage = 1;
 
   Future<String> _getJsonData(String endpoint, [int page = 1]) async {
-    var url = Uri.https(_urlBase, endpoint,
+    final url = Uri.https(_urlBase, endpoint,
         {'api_key': _apiKey, 'language': _language, 'page': '$page'});
 
     // Await the http get response, then decode the json-formatted response.
@@ -64,5 +65,18 @@ class MovieProvider extends ChangeNotifier {
     final creditsResponse = MovieCredits.fromJson(jsonData);
 
     return moviesCast[movieId] = creditsResponse.cast;
+  }
+
+  Future<List<Movie>> searchResultMovies(String query) async {
+    String endpoint = '3/search/movie';
+
+    final url = Uri.https(_urlBase, endpoint,
+        {'api_key': _apiKey, 'language': _language, 'query': query});
+
+    // Await the http get response, then decode the json-formatted response.
+    final response = await http.get(url);
+    final searchResponse = SearchMoviesResponse.fromJson(response.body);
+
+    return searchResponse.results;
   }
 }
